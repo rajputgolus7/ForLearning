@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Placeholder Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f9;
+        }
+        /* Custom styles for the primary button */
+        .btn-primary {
+            transition: all 0.15s ease-in-out;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container" class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <header class="max-w-4xl mx-auto mb-8">
+            <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">Checkout</h1>
+            <p class="text-gray-500 mt-1">Review your order and complete the payment.</p>
+        </header>
+
+        <!-- Main Checkout Area -->
+        <div id="checkout-view" class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl p-6 lg:p-10">
+            <div class="lg:grid lg:grid-cols-3 lg:gap-10">
+
+                <!-- Left Column: Shipping & Payment Form -->
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-3">Shipping & Payment</h2>
+
+                    <!-- Shipping Address -->
+                    <section class="mb-8 p-4 border rounded-lg bg-gray-50">
+                        <h3 class="text-xl font-medium text-gray-700 mb-4">Shipping Details</h3>
+                        <form id="checkout-form" class="space-y-4">
+                            <!-- Contact Info -->
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                                <input type="email" id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                            </div>
+                            <!-- Address -->
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-700">Street Address</label>
+                                <input type="text" id="address" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                                    <input type="text" id="city" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                                </div>
+                                <div>
+                                    <label for="state" class="block text-sm font-medium text-gray-700">State / Province</label>
+                                    <input type="text" id="state" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                                </div>
+                                <div>
+                                    <label for="zip" class="block text-sm font-medium text-gray-700">ZIP / Postal Code</label>
+                                    <input type="text" id="zip" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                    <!-- Payment Information -->
+                    <section class="mb-8 p-4 border rounded-lg bg-gray-50">
+                        <h3 class="text-xl font-medium text-gray-700 mb-4">Payment Method</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="card-number" class="block text-sm font-medium text-gray-700">Card Number</label>
+                                <input type="text" id="card-number" placeholder="XXXX XXXX XXXX XXXX" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <label for="expiry" class="block text-sm font-medium text-gray-700">Expiration Date (MM/YY)</label>
+                                    <input type="text" id="expiry" placeholder="MM/YY" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                                </div>
+                                <div>
+                                    <label for="cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+                                    <input type="text" id="cvv" placeholder="123" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border" required>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Place Order Button -->
+                    <button id="place-order-btn" type="button" onclick="handleCheckout()" class="btn-primary w-full py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Place Order (<span id="btn-total">₹0.00</span>)
+                    </button>
+                    <div id="error-message" class="text-red-500 text-center mt-3 hidden"></div>
+                </div>
+
+                <!-- Right Column: Order Summary / Receipt -->
+                <div class="lg:col-span-1 mt-10 lg:mt-0">
+                    <div class="sticky top-10 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Order Summary</h2>
+
+                        <div class="space-y-3">
+                            <!-- Subtotal -->
+                            <div class="flex justify-between text-gray-600 text-sm">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">₹0.00</span>
+                            </div>
+                            <!-- Tax -->
+                            <div class="flex justify-between text-gray-600 text-sm">
+                                <span>Tax</span>
+                                <span id="summary-tax">₹0.00</span>
+                            </div>
+                            <!-- Delivery -->
+                            <div class="flex justify-between text-gray-600 text-sm">
+                                <span>Delivery</span>
+                                <span id="summary-delivery">₹0.00</span>
+                            </div>
+                            <!-- Divider -->
+                            <div class="border-t border-gray-300 pt-3"></div>
+                            <!-- Total -->
+                            <div class="flex justify-between font-bold text-lg text-gray-900">
+                                <span>Order Total</span>
+                                <span id="summary-total">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <p class="text-xs text-gray-500 mt-6 pt-4 border-t text-center">
+                            By placing this order, you agree to the Terms and Conditions of the Placeholder Site.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Success Message -->
+        <div id="success-view" class="hidden max-w-2xl mx-auto text-center bg-green-50 p-10 rounded-xl shadow-xl border border-green-200 mt-10">
+            <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <h2 class="text-3xl font-bold text-green-700 mb-2">Order Placed Successfully!</h2>
+            <p class="text-lg text-gray-600">Your order has been confirmed and is being processed.</p>
+            <p class="mt-4 text-sm text-gray-500">A confirmation email has been sent to the address provided.</p>
+            <a href="#" class="mt-6 inline-block py-2 px-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition duration-150">Continue Shopping</a>
+        </div>
+    </div>
+
+    <script>
+        // Function to format a number as currency
+        const formatCurrency = (amount) => {
+            const num = parseFloat(amount);
+            if (isNaN(num)) return '$0.00';
+            return '$' + num.toFixed(2);
+        };
+
+        // 1. Get price details from URL query parameters
+        function loadOrderDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Default values if parameters are missing
+            const subtotal = urlParams.get('subtotal') || '49.99';
+            const tax = urlParams.get('tax') || '4.00';
+            const delivery = urlParams.get('delivery') || '5.00';
+
+            // Calculate total if not provided, otherwise use the provided one
+            let totalValue;
+            const totalParam = urlParams.get('total');
+            if (totalParam) {
+                totalValue = totalParam;
+            } else {
+                const sub = parseFloat(subtotal) || 0;
+                const tx = parseFloat(tax) || 0;
+                const dev = parseFloat(delivery) || 0;
+                totalValue = (sub + tx + dev).toFixed(2);
+            }
+
+            // Update the Order Summary section
+            document.getElementById('summary-subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('summary-tax').textContent = formatCurrency(tax);
+            document.getElementById('summary-delivery').textContent = formatCurrency(delivery);
+            document.getElementById('summary-total').textContent = formatCurrency(totalValue);
+            document.getElementById('btn-total').textContent = formatCurrency(totalValue);
+        }
+
+        // 2. Checkout Simulation
+        function handleCheckout() {
+            const form = document.getElementById('checkout-form');
+            const errorMessage = document.getElementById('error-message');
+
+            // Basic Form Validation Check
+            if (!form.checkValidity()) {
+                errorMessage.textContent = 'Please fill out all required shipping and payment fields.';
+                errorMessage.classList.remove('hidden');
+                // Trigger browser's native error messages
+                form.reportValidity();
+                return;
+            }
+
+            // Simple validation simulation (e.g., checking card number length)
+            const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+            if (cardNumber.length < 13 || cardNumber.length > 19 || isNaN(cardNumber)) {
+                errorMessage.textContent = 'Please enter a valid card number.';
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // If validation passes (simulated success)
+            errorMessage.classList.add('hidden');
+            
+            // Show the success view and hide the checkout view
+            document.getElementById('checkout-view').classList.add('hidden');
+            document.getElementById('success-view').classList.remove('hidden');
+            
+            // Scroll to top to ensure success message is visible
+            window.scrollTo(0, 0);
+
+            // Optional: Log the simulated order data
+            console.log('Order Simulation Complete:', {
+                email: document.getElementById('email').value,
+                total: document.getElementById('summary-total').textContent,
+                time: new Date().toISOString()
+            });
+        }
+
+        // Initialize details on page load
+        window.onload = loadOrderDetails;
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavorHub Express | Sign In</title>
+	<link rel="icon" type="image/png" href="F:\flavorhub\pngtree-orange-dotted-circle-png-image_14525083.png">
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom colors and font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#f55d3e', // Vibrant red-orange for food accent
+                        'secondary': '#2c3e50', // Dark blue for contrast/header
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* General styling for the body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Custom styling for the primary button effect */
+        .login-button {
+            transition: all 0.3s ease;
+        }
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 93, 62, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen justify-center items-center">
+
+    <div class="w-full max-w-md mx-4 p-8 bg-white rounded-2xl shadow-2xl my-10 border-t-8 border-primary">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+			<h1 class="tracking-tight"><center>
+                <img src='F:\flavorhub\happy-boy-enjoying-meal_1308-133338.avif' style='height:112px; margin-top: -28px;'></center>
+            </h1>
+            <h1 class="text-4xl font-extrabold text-secondary tracking-tight">
+                Welcome Back
+            </h1>
+            <p class="text-gray-500 mt-2">Sign in to manage your FlavorHub orders.</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="handleLogin(event)" class="space-y-6">
+            
+            <!-- Message Area -->
+            <div id="message-box" class="hidden p-3 rounded-lg text-sm font-medium"></div>
+
+            <!-- Username Field -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username (Golu)" required
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150">
+            </div>
+
+            <!-- Password Field -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password (1234)" required
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-primary focus:border-primary transition duration-150">
+            </div>
+
+            <!-- Sign In Button -->
+            <button type="submit" class="login-button w-full text-center bg-primary text-white text-lg font-bold px-6 py-3 rounded-xl shadow-lg hover:bg-red-600 transition duration-300">
+                Sign In
+            </button>
+
+            <!-- Forgot Password/Alternative Links -->
+            <div class="text-center text-sm">
+                <a href="#" class="font-medium text-primary hover:text-red-600 transition duration-200">Forgot Password?</a>
+            </div>
+            
+            <!-- Back to Home -->
+            <div class="text-center text-sm pt-4 border-t border-gray-100">
+                <p class="text-gray-600">Don't have an account? <a href="#" class="font-medium text-secondary hover:text-primary transition duration-200">Sign Up</a></p>
+                <a href="index.html" class="mt-2 block text-gray-500 hover:text-gray-700 transition duration-200">← Back to Home</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- JavaScript for Mock Login Logic -->
+    <script>
+        // Hardcoded credentials for demonstration
+        const MOCK_USERNAME = 'Golu';
+        const MOCK_PASSWORD = '1234';
+        const MESSAGE_BOX = document.getElementById('message-box');
+
+        /**
+         * Handles the form submission and validates credentials.
+         */
+        function handleLogin(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value;
+
+            // Clear previous messages
+            MESSAGE_BOX.classList.add('hidden');
+            MESSAGE_BOX.textContent = '';
+            MESSAGE_BOX.classList.remove('bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+
+            if (usernameInput === MOCK_USERNAME && passwordInput === MOCK_PASSWORD) {
+                // Success
+                MESSAGE_BOX.classList.remove('hidden');
+                MESSAGE_BOX.classList.add('bg-green-100', 'text-green-800');
+                MESSAGE_BOX.textContent = 'Login successful! Redirecting to the dashboard...';
+                window.location.href = 'index.html';
+                // Mock redirection after 1 second
+                setTimeout(() => {
+                    // Replace with actual dashboard/home URL if one existed
+                    // window.location.href = 'index.html'; 
+                }, 1000); 
+
+            } else {
+                // Failure
+                MESSAGE_BOX.classList.remove('hidden');
+                MESSAGE_BOX.classList.add('bg-red-100', 'text-red-800');
+                MESSAGE_BOX.textContent = 'Invalid username or password. Please try again.';
+            }
+        }
+    </script>
+<style>
+    .cursor-dot {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: blue;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+        animation: fadeOut 0.6s linear forwards;
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; transform: scale(1) translate(-50%, -50%); }
+        to { opacity: 0; transform: scale(0.3) translate(-50%, -50%); }
+    }
+</style>
+
+<script>
+    document.addEventListener("mousemove", (e) => {
+        const dot = document.createElement("div");
+        dot.classList.add("cursor-dot");
+        dot.style.left = `${e.clientX}px`;
+        dot.style.top = `${e.clientY}px`;
+        document.body.appendChild(dot);
+
+        setTimeout(() => {
+            dot.remove();
+        }, 600);
+    });
+</script>
+
+</body>
+</html>

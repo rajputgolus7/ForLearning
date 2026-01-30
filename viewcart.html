@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlavorHub Express | Your Cart</title>
+	<link rel="icon" type="image/png" href="F:\flavorhub\pngtree-orange-dotted-circle-png-image_14525083.png">
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind for custom colors and font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#f55d3e', // Vibrant red-orange for food accent
+                        'secondary': '#2c3e50', // Dark blue for contrast/header
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* General styling for the body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Style for the Checkout button transition */
+        .checkout-button {
+            transition: all 0.3s ease;
+        }
+        .checkout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 93, 62, 0.4);
+        }
+    </style>
+</head>
+<body class="text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Header & Navigation (Copied from index.html) -->
+    <header class="sticky top-0 z-50 bg-secondary shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <!-- Logo/Site Name -->
+            <a href="index.html" class="text-2xl font-extrabold text-primary tracking-tight transform hover:scale-105 transition duration-300">
+                FlavorHub Express
+            </a>
+            
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-6 text-white font-medium">
+                <a href="index.html#featured" class="hover:text-primary transition duration-200">Featured</a>
+                <a href="index.html#categories" class="hover:text-primary transition duration-200">Categories</a>
+                <a href="viewcart.html" class="text-primary transition duration-200 border-b-2 border-primary pb-1">Cart (<span id="nav-cart-count">4</span>)</a>
+                <a href="login.html" class="bg-primary px-4 py-1.5 rounded-full text-white hover:bg-red-600 transition duration-200">Sign In</a>
+            </nav>
+
+            <!-- Mobile Menu Button (For consistency, though not implemented here) -->
+            <button class="md:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content - Cart View -->
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-6">
+            
+            <h1 class="text-5xl font-extrabold text-secondary mb-10 text-center">Your Order Basket</h1>
+            
+            <!-- Cart Layout: Items (2/3 width) and Summary (1/3 width) -->
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- 1. Cart Items List (The left/main column) -->
+                <div id="cart-items-container" class="lg:w-2/3 space-y-6">
+                    
+                    <!-- Cart Item 1: Pizza -->
+                    <div data-product-id="101" data-price="750.00" class="cart-item bg-white p-4 md:p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <img src="https://media.istockphoto.com/id/521403691/photo/hot-homemade-pepperoni-pizza.jpg?s=612x612&w=0&k=20&c=PaISuuHcJWTEVoDKNnxaHy7L2BTUkyYZ06hYgzXmTbo=" alt="Gourmet Pizza" class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+                        
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-xl font-bold text-secondary">Gourmet Pepperoni Pizza</h3>
+                            <p class="text-sm text-gray-500">Restaurant: Primo Pizzeria</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <!-- Quantity Control -->
+                            <div class="flex items-center border border-gray-300 rounded-lg p-1">
+                                <button onclick="updateQuantity(101, -1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">-</button>
+                                <input type="number" id="qty-101" value="1" min="1" data-product-id="101" onchange="updateQuantity(101, 0, this.value)" class="w-12 text-center border-none focus:ring-0 font-semibold bg-white p-0">
+                                <button onclick="updateQuantity(101, 1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">+</button>
+                            </div>
+                            
+                            <!-- Subtotal Price -->
+                            <div class="text-right w-24">
+                                <p class="text-lg font-bold text-primary" id="subtotal-101">₹399.00</p>
+                            </div>
+                            
+                            <!-- Remove Button -->
+                            <button onclick="removeItem(101)" class="text-gray-400 hover:text-red-500 transition duration-200 p-2 rounded-full hover:bg-red-50">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Item 2: Sushi -->
+                    <div data-product-id="205" data-price="1200.00" class="cart-item bg-white p-4 md:p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <img src="https://png.pngtree.com/thumb_back/fw800/background/20241126/pngtree-picture-of-a-sushi-platter-with-variety-rolls-and-nigiri-image_16649134.jpg" alt="Sushi Platter" class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+                        
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-xl font-bold text-secondary">Deluxe Sushi Platter</h3>
+                            <p class="text-sm text-gray-500">Restaurant: Hanami Roll House</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center border border-gray-300 rounded-lg p-1">
+                                <button onclick="updateQuantity(205, -1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">-</button>
+                                <input type="number" id="qty-205" value="2" min="1" data-product-id="205" onchange="updateQuantity(205, 0, this.value)" class="w-12 text-center border-none focus:ring-0 font-semibold bg-white p-0">
+                                <button onclick="updateQuantity(205, 1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">+</button>
+                            </div>
+                            <div class="text-right w-24">
+                                <p class="text-lg font-bold text-primary" id="subtotal-205">₹2400.00</p>
+                            </div>
+                            <button onclick="removeItem(205)" class="text-gray-400 hover:text-red-500 transition duration-200 p-2 rounded-full hover:bg-red-50">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Item 3: Burger -->
+                    <div data-product-id="312" data-price="550.00" class="cart-item bg-white p-4 md:p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB2w5v2L8zvKOzHyLdOrbLwIt39VLUlklTLw&s" alt="Vegan Burger" class="w-24 h-24 rounded-xl object-cover flex-shrink-0">
+                        
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="text-xl font-bold text-secondary">Spicy Vegan Bean Burger</h3>
+                            <p class="text-sm text-gray-500">Restaurant: Green Fork</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center border border-gray-300 rounded-lg p-1">
+                                <button onclick="updateQuantity(312, -1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">-</button>
+                                <input type="number" id="qty-312" value="1" min="1" data-product-id="312" onchange="updateQuantity(312, 0, this.value)" class="w-12 text-center border-none focus:ring-0 font-semibold bg-white p-0">
+                                <button onclick="updateQuantity(312, 1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-8 h-8 rounded-lg transition duration-150 flex items-center justify-center font-bold text-lg">+</button>
+                            </div>
+                            <div class="text-right w-24">
+                                <p class="text-lg font-bold text-primary" id="subtotal-312">₹550.00</p>
+                            </div>
+                            <button onclick="removeItem(312)" class="text-gray-400 hover:text-red-500 transition duration-200 p-2 rounded-full hover:bg-red-50">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <!-- 2. Order Summary Panel (The right/side column) -->
+                <div class="lg:w-1/3">
+                    <div class="bg-white p-6 rounded-2xl shadow-2xl sticky top-24">
+                        <h2 class="text-2xl font-bold text-secondary border-b pb-3 mb-4">Order Summary</h2>
+                        
+                        <div class="space-y-3 text-lg">
+                            <!-- Subtotal -->
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span class="font-semibold" id="order-subtotal">₹3700.00</span>
+                            </div>
+                            
+                            <!-- Delivery Fee -->
+                            <div class="flex justify-between">
+                                <span>Delivery Fee:</span>
+                                <span class="font-semibold text-green-600" id="delivery-fee">₹50.00</span>
+                            </div>
+
+                            <!-- Tax -->
+                            <div class="flex justify-between">
+                                <span>Tax (10%):</span>
+                                <span class="font-semibold" id="order-tax">₹370.00</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="border-t border-gray-300 mt-5 pt-5 flex justify-between text-2xl font-extrabold text-secondary">
+                            <span>Total:</span>
+                            <span class="text-primary" id="order-total">₹4120.00</span>
+                        </div>
+
+                        <!-- Checkout Button -->
+                        <button onClick='checkout()' class="checkout-button w-full mt-6 block text-center bg-primary text-white text-xl font-bold px-6 py-4 rounded-xl shadow-xl hover:bg-red-600 transition duration-300">
+							Proceed to Checkout
+                        </button>
+                        
+                        <!-- Back to Menu Button -->
+                        <a href="index.html" class="w-full mt-4 block text-center text-secondary font-medium hover:text-primary transition duration-200">
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer (Copied from index.html) -->
+    <footer class="bg-secondary text-gray-400 py-10 mt-12">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+            
+            <!-- Column 1: Logo & Mission -->
+            <div>
+                <h4 class="text-xl font-bold text-primary mb-3">FlavorHub Express</h4>
+                <p class="text-sm">Delivering joy, one plate at a time. The best local food, delivered fast.</p>
+            </div>
+            
+            <!-- Column 2: Quick Links -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-3">Quick Links</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-primary transition duration-200">About Us</a></li>
+                    <li><a href="placeorder.html" class="hover:text-primary transition duration-200">How It Works</a></li>
+                    <li><a href="#" class="hover:text-primary transition duration-200">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <!-- Column 3: Legal -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-3">Legal</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-primary transition duration-200">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-primary transition duration-200">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-primary transition duration-200">Cookie Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Contact -->
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-3">Contact</h4>
+                <p class="text-sm">Email: support@flavorhub.com</p>
+                <p class="text-sm">Phone: (555) 123-FOOD</p>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-gray-700 text-center text-sm text-gray-500">
+            &copy; 2025 FlavorHub Express. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript for Cart Logic (Mock functionality) -->
+    <script>
+		function checkout(){
+			const sub = document.getElementById('order-subtotal').innerText;
+			const tax = document.getElementById('order-tax').innerText;
+			const del = 50;
+			const total = document.getElementById('order-total').innerText;
+
+			window.location.href = `placeorder.html?sub=${sub}&total=${total}`;
+
+			}
+        // Mock data structure to hold cart items and prices (Prices updated to Rupees)
+        const cartItems = [
+            { id: 101, price: 399.00, qty: 1, element: document.querySelector('[data-product-id="101"]') },
+            { id: 205, price: 239.00, qty: 2, element: document.querySelector('[data-product-id="205"]') },
+            { id: 312, price: 198.00, qty: 1, element: document.querySelector('[data-product-id="312"]') },
+        ];
+
+        const TAX_RATE = 0.10;
+        const DELIVERY_FEE = 50.00; // Updated to a realistic Rupee delivery fee
+
+        // Function to recalculate all totals
+        function calculateTotals() {
+            let subtotal = 0;
+            let totalItems = 0;
+
+            cartItems.forEach(item => {
+                subtotal += item.price * item.qty;
+                totalItems += item.qty;
+                
+                // Update item line subtotal in the UI
+                const itemSubtotalElement = document.getElementById(`subtotal-${item.id}`);
+                if (itemSubtotalElement) {
+                    // Use template literal for inserting Rupee symbol
+                    itemSubtotalElement.textContent = `₹${(item.price * item.qty).toFixed(2)}`;
+                }
+            });
+
+            const tax = subtotal * TAX_RATE;
+            const total = subtotal + DELIVERY_FEE + tax;
+
+            // Update summary UI elements (Using template literal for Rupee symbol)
+            document.getElementById('order-subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('order-tax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('order-total').textContent = `₹${total.toFixed(2)}`;
+            document.getElementById('nav-cart-count').textContent = totalItems;
+            
+            // Update Delivery Fee display (only for non-zero change)
+            document.getElementById('delivery-fee').textContent = `₹${DELIVERY_FEE.toFixed(2)}`;
+        }
+
+        // Function to update item quantity
+        function updateQuantity(productId, change, fixedValue) {
+            const item = cartItems.find(i => i.id === productId);
+            if (!item) return;
+
+            let newQty;
+
+            if (change !== 0) {
+                // If change button (+/-) was clicked
+                newQty = item.qty + change;
+            } else {
+                // If input field was changed
+                newQty = parseInt(fixedValue);
+            }
+
+            // Ensure quantity is not less than 1
+            if (isNaN(newQty) || newQty < 1) {
+                newQty = 1;
+            }
+
+            item.qty = newQty;
+            
+            // Update input field value
+            const inputElement = document.getElementById(`qty-${productId}`);
+            if (inputElement) {
+                inputElement.value = newQty;
+            }
+
+            calculateTotals();
+        }
+
+        // Function to remove item from cart (mock)
+        function removeItem(productId) {
+            const index = cartItems.findIndex(i => i.id === productId);
+            if (index > -1) {
+                const itemElement = cartItems[index].element;
+                
+                // Remove the element from the DOM with a visual effect (optional)
+                if (itemElement) {
+                    itemElement.style.opacity = 0;
+                    itemElement.style.transform = 'translateX(-20px)';
+                    itemElement.style.transition = 'all 0.3s ease-out';
+                    
+                    setTimeout(() => {
+                        itemElement.remove();
+                    }, 300);
+                }
+                
+                // Remove from mock data array
+                cartItems.splice(index, 1);
+                
+                // Recalculate totals after removal
+                calculateTotals();
+            } else {
+                console.error(`Product ID ${productId} not found in cart.`);
+            }
+        }
+
+        // Initial calculation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateTotals();
+        });
+    </script>
+<style>
+    .cursor-dot {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: lime;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+        animation: fadeOut 0.6s linear forwards;
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; transform: scale(1) translate(-50%, -50%); }
+        to { opacity: 0; transform: scale(0.3) translate(-50%, -50%); }
+    }
+</style>
+
+<script>
+    document.addEventListener("mousemove", (e) => {
+        const dot = document.createElement("div");
+        dot.classList.add("cursor-dot");
+        dot.style.left = `${e.clientX}px`;
+        dot.style.top = `${e.clientY}px`;
+        document.body.appendChild(dot);
+
+        setTimeout(() => {
+            dot.remove();
+        }, 600);
+    });
+</script>
+
+</body>
+</html>
